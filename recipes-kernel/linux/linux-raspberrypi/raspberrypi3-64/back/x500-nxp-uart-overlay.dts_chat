@@ -1,0 +1,62 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835";
+
+    fragment@0 {
+        target = <&i2c0>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            status = "okay";
+
+            sc16is740: sc16is740@4d {
+                compatible = "nxp,sc16is740";
+                reg = <0x4d>; /* I2C address */
+                clocks = <&sc16is740_clk>;
+                interrupt-parent = <&gpio>;
+                interrupts = <45 2>; /* IRQ on GPIO 45, falling edge */
+                pinctrl-0 = <&int_pins>;
+                pinctrl-names = "default";
+                gpio-controller;
+                #gpio-cells = <2>;
+                i2c-max-frequency = <400000>;
+                status = "okay";
+            };
+        };
+    };
+
+    fragment@1 {
+        target-path = "/";
+        __overlay__ {
+            sc16is740_clk: sc16is740_i2c_clk@4d {
+                compatible = "fixed-clock";
+                #clock-cells = <0>;
+                clock-frequency = <14745600>;
+            };
+        };
+    };
+
+    fragment@2 {
+        target = <&gpio>;
+        __overlay__ {
+            int_pins: int_pins@45 {
+                reg = <45>;
+                brcm,pins = <45>;
+                brcm,function = <0>; /* input */
+                brcm,pull = <0>;     /* no pull */
+            };
+        };
+    };
+
+    __overrides__ {
+        int_pin = <&sc16is740>,"interrupts:0",
+                  <&int_pins>,"brcm,pins:0",
+                  <&int_pins>,"reg:0";
+        addr = <&sc16is740>,"reg:0",
+               <&sc16is740_clk>,"name";
+        xtal = <&sc16is740_clk>,"clock-frequency:0";
+    };
+};
+

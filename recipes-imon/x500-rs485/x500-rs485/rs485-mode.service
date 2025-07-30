@@ -1,0 +1,11 @@
+[Unit]
+Description=Enable RS485 mode on ttyAMA0 and ttySC0
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/bin/rs485_enable.py
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

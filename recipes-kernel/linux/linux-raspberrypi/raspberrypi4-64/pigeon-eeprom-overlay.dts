@@ -1,0 +1,27 @@
+/dts-v1/;
+/plugin/;
+/ {
+
+fragment@0 {
+	target = <&i2c1>;
+		__overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			clock-frequency = <100000>;
+			status = "okay";
+
+			eeprom1@54 {
+				compatible = "atmel,24c01";
+				reg = <0x54>;
+				status = "okay";
+			};                        
+
+			eeprom2@5C {
+                                compatible = "atmel,24cs01";
+                                reg = <0x5C>;
+                                status = "okay";
+                        };		
+
+		};
+	};    
+};

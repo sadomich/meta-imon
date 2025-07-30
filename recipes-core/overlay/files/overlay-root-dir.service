@@ -1,0 +1,14 @@
+[Unit]
+Description=Overlayfs root filesystem
+DefaultDependencies=no
+Before=local-fs.target
+After=systemd-remount-fs.service data.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/mount-overlay.sh /data/overlayfs/root /root
+ExecStop=/bin/umount /root
+
+[Install]
+WantedBy=local-fs.target

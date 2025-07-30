@@ -1,0 +1,2 @@
+KERNEL_PART_A="mmc 0:3"
+KERNEL_PART_B="mmc 0:5"

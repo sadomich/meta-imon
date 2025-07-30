@@ -1,0 +1,23 @@
+[Unit]
+Description=SMSTools service
+Documentation=man:systemd-sysv-generator(8)
+After=wwan.service
+BindsTo=wwan.service
+Requires=wwan.service
+Wants=wwan.service
+
+[Service]
+Type=forking
+PIDFile=/var/run/smsd.pid
+ExecStart=/usr/bin/sms3 start
+ExecStop=/usr/bin/sms3 stop
+TimeoutSec=5min
+IgnoreSIGPIPE=no
+KillMode=process
+GuessMainPID=no
+RemainAfterExit=yes
+SuccessExitStatus=5 6
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

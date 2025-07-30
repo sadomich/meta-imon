@@ -1,0 +1,51 @@
+From f60df9b30231c2190c1a8bf69b5df7c6c4ec4fa6 Mon Sep 17 00:00:00 2001
+From: Michal Sadowski <Michal.SadowskiEXT@delaval.com>
+Date: Thu, 20 Jun 2024 15:58:14 +0200
+Subject: [PATCH] Setup modem tty before start
+
+---
+ sms3 | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+Index: smstools3/scripts/sms3
+===================================================================
+--- smstools3.orig/scripts/sms3
++++ smstools3/scripts/sms3
+@@ -42,10 +42,37 @@ esac
+ # Maximum time to stop smsd, after that it gets killed hardly:
+ MAXWAIT=45
+ 
++setmodemdev() {
++	dir="/dev/serial/by-id"
++	SMS_DEV_PATTERN=$(/bin/awk -F'=' '/^SMS_DEV_PATTERN=/ {print $2}' /etc/wwan.conf | tr -d '"')
++	SMS_DEV_PATTERN="${SMS_DEV_PATTERN:-usb-Sierra_Wireless__Incorporated_Sierra_Wireless_EM7455_*-if03-port0}"
++
++	find "$dir" -name "$SMS_DEV_PATTERN" | while read -r file; do
++		if [ -e "$file" ]; then
++			new_line="device = ${file}"
++			old_line="^device =.*"
++			sed -i "s|${old_line}|${new_line}|g" /etc/smsd.conf
++		else
++			echo "No matching files found."
++		fi
++	done
++}
++
+ case "$1" in
+   start)
+ 	test -x $DAEMON || exit 0
+ 	$ECHO -n "Starting SMS Daemon: "
++	setmodemdev
++
++	mkdir -p /data/sms
++	mkdir -p /data/sms/checked
++	mkdir -p /data/sms/incoming
++	mkdir -p /data/sms/outgoing
++	mkdir -p /data/sms/sent
++	mkdir -p /data/sms/failed
++	mkdir -p /data/sms/stats
++	[ ! -f "/data/sms/whitelist" ] && sqlite3 /data/db/main.db "SELECT number || ' # ' || name FROM sms_whitelist;" > /data/sms/whitelist
++
+ 	MSG="."
+ 	ARGS="-n MAINPROCESS -p$PIDFILE -i$INFOFILE"
+ 	[ "x$USER" != x ] && ARGS="$ARGS -u$USER"

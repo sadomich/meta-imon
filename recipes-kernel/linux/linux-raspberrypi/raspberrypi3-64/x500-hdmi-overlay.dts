@@ -1,0 +1,13 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+ compatible = "brcm,bcm2835";
+
+  fragment@0 {
+    target = <&hdmi>;
+    __overlay__ {
+      hpd-gpios = <&gpio 46 1>; /* GPIO_ACTIVE_LOW=1 */
+    };
+  };
+};

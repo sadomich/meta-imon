@@ -1,0 +1,15 @@
+
+# The mmc storage layout:
+# ---------------------------------------------------------------------
+# | bootA | bootB | uboot env | rootfsA | rootfsB | /var/log | /data  |
+# ---------------------------------------------------------------------
+
+part /boot --source bootimg-partition --ondisk mmcblk0 --fstype=vfat --label boot_A --active --align 4096 --fixed-size 50M --no-fstab-update
+part --ondisk mmcblk0 --label boot_B --align 4096 --no-table --fixed-size 50M
+part /uboot_env --source rawcopy --sourceparams="file=ubootenv.vfat" --fstype=vfat --ondisk mmcblk0 --label uboot_env --align 4096 --fixed-size 10M --no-fstab-update
+part --fixed-size 128M --source rawcopy --sourceparams="file=kernel.ext4" --ondisk ${DISK_DRIVE_NAME} --fstype=ext4 --mkfs-extraopts="-b 4096" --label kernel_A --align 4096
+part --fixed-size 128M --ondisk ${DISK_DRIVE_NAME} --fstype=ext4 --mkfs-extraopts="-b 4096" --label kernel_B --align 4096
+part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --label rootfs_A --align 4096 --fixed-size 2048M
+part --ondisk mmcblk0 --fstype=ext4 --label rootfs_B --align 4096 --fixed-size 2048M
+part /var/log --source rootfs --rootfs-dir=${IMAGE_ROOTFS}/var/log --ondisk mmcblk0 --fstype=ext4 --mkfs-extraopts="-b 4096" --label log --align 4096 --fixed-size 1024M --no-fstab-update
+part /data --source rootfs --rootfs-dir=${IMAGE_ROOTFS}/data --ondisk mmcblk0 --fstype=btrfs --label data --align 4096 --fsoptions "x-systemd.growfs" --fixed-size 128M --no-fstab-update

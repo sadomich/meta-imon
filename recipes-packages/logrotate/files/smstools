@@ -1,0 +1,10 @@
+/var/log/smsd.log {
+	su root adm
+	maxsize 2M
+	copytruncate
+	rotate 10
+	compress
+	delaycompress
+	missingok
+	notifempty
+}

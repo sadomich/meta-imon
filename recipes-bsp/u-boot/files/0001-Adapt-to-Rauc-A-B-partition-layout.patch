@@ -1,0 +1,154 @@
+From ad213874a46b2ec6032cb43d297a6faafb3a61c2 Mon Sep 17 00:00:00 2001
+From: Michal Sadowski <michal.sadowski@protonmail.com>
+Date: Thu, 23 May 2024 19:10:54 +0200
+Subject: [PATCH] Adapt to Rauc A/B partition layout
+
+---
+
+Upstream-Status: Inappropriate [oe specific]
+
+ configs/rpi_0_w_defconfig      | 2 +-
+ configs/rpi_2_defconfig        | 2 +-
+ configs/rpi_3_32b_defconfig    | 2 +-
+ configs/rpi_3_b_plus_defconfig | 2 +-
+ configs/rpi_3_defconfig        | 2 +-
+ configs/rpi_4_32b_defconfig    | 2 +-
+ configs/rpi_4_defconfig        | 2 +-
+ configs/rpi_arm64_defconfig    | 2 +-
+ configs/rpi_defconfig          | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
+
+Index: git/configs/rpi_0_w_defconfig
+===================================================================
+--- git.orig/configs/rpi_0_w_defconfig
++++ git/configs/rpi_0_w_defconfig
+@@ -25,7 +25,7 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+ CONFIG_OF_EMBED=y
+-CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
++CONFIG_ENV_FAT_DEVICE_AND_PART="0:2"
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
+ CONFIG_TFTP_TSIZE=y
+Index: git/configs/rpi_2_defconfig
+===================================================================
+--- git.orig/configs/rpi_2_defconfig
++++ git/configs/rpi_2_defconfig
+@@ -26,7 +26,7 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+ CONFIG_OF_EMBED=y
+-CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
++CONFIG_ENV_FAT_DEVICE_AND_PART="0:2"
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
+ CONFIG_TFTP_TSIZE=y
+Index: git/configs/rpi_3_32b_defconfig
+===================================================================
+--- git.orig/configs/rpi_3_32b_defconfig
++++ git/configs/rpi_3_32b_defconfig
+@@ -25,7 +25,7 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+ CONFIG_OF_EMBED=y
+-CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
++CONFIG_ENV_FAT_DEVICE_AND_PART="0:2"
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
+ CONFIG_TFTP_TSIZE=y
+Index: git/configs/rpi_3_b_plus_defconfig
+===================================================================
+--- git.orig/configs/rpi_3_b_plus_defconfig
++++ git/configs/rpi_3_b_plus_defconfig
+@@ -24,7 +24,7 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+ CONFIG_OF_EMBED=y
+-CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
++CONFIG_ENV_FAT_DEVICE_AND_PART="0:2"
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
+ CONFIG_TFTP_TSIZE=y
+Index: git/configs/rpi_3_defconfig
+===================================================================
+--- git.orig/configs/rpi_3_defconfig
++++ git/configs/rpi_3_defconfig
+@@ -24,7 +24,7 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+ CONFIG_OF_EMBED=y
+-CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
++CONFIG_ENV_FAT_DEVICE_AND_PART="0:2"
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
+ CONFIG_TFTP_TSIZE=y
+Index: git/configs/rpi_4_32b_defconfig
+===================================================================
+--- git.orig/configs/rpi_4_32b_defconfig
++++ git/configs/rpi_4_32b_defconfig
+@@ -26,7 +26,7 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_PCI=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+-CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
++CONFIG_ENV_FAT_DEVICE_AND_PART="0:2"
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
+ CONFIG_TFTP_TSIZE=y
+Index: git/configs/rpi_4_defconfig
+===================================================================
+--- git.orig/configs/rpi_4_defconfig
++++ git/configs/rpi_4_defconfig
+@@ -26,7 +26,7 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_PCI=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+-CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
++CONFIG_ENV_FAT_DEVICE_AND_PART="0:2"
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
+ CONFIG_TFTP_TSIZE=y
+@@ -65,3 +65,5 @@ CONFIG_SYS_WHITE_ON_BLACK=y
+ CONFIG_VIDEO_BCM2835=y
+ CONFIG_CONSOLE_SCROLL_LINES=10
+ CONFIG_PHYS_TO_BUS=y
++CONFIG_SUPPORT_RAW_INITRD=y
++
+Index: git/configs/rpi_arm64_defconfig
+===================================================================
+--- git.orig/configs/rpi_arm64_defconfig
++++ git/configs/rpi_arm64_defconfig
+@@ -25,7 +25,7 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_PCI=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+-CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
++CONFIG_ENV_FAT_DEVICE_AND_PART="0:2"
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
+ CONFIG_TFTP_TSIZE=y
+ CONFIG_DM_DMA=y
+@@ -57,3 +57,5 @@ CONFIG_SYS_WHITE_ON_BLACK=y
+ CONFIG_VIDEO_BCM2835=y
+ CONFIG_CONSOLE_SCROLL_LINES=10
+ CONFIG_PHYS_TO_BUS=y
++CONFIG_SUPPORT_RAW_INITRD=y
++
+Index: git/configs/rpi_defconfig
+===================================================================
+--- git.orig/configs/rpi_defconfig
++++ git/configs/rpi_defconfig
+@@ -25,7 +25,7 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+ CONFIG_OF_EMBED=y
+-CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
++CONFIG_ENV_FAT_DEVICE_AND_PART="0:2"
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
+ CONFIG_TFTP_TSIZE=y
+@@ -50,3 +50,4 @@ CONFIG_VIDEO_BCM2835=y
+ CONFIG_CONSOLE_SCROLL_LINES=10
+ CONFIG_PHYS_TO_BUS=y
+ CONFIG_EFI_LOADER=y
++CONFIG_SUPPORT_RAW_INITRD=y
