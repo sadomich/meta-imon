@@ -1,0 +1,14 @@
+[Unit]
+Description=Generate machine-id on writable disk
+DefaultDependencies=no
+Conflicts=shutdown.target
+Before=shutdown.target
+After=local-fs.target first-boot-complete.target mount-etc-dir.service
+ConditionPathIsReadWrite=/etc
+ConditionPathIsMountPoint=/etc/machine-id
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=systemd-machine-id-setup
+TimeoutSec=30s

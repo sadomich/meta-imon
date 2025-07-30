@@ -1,0 +1,37 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+
+compatible = "raspberrypi,4-compute-module\0brcm,bcm2711";
+
+fragment@0 {
+    target = <&gpio>;
+    __overlay__ {
+        led_pin: led_pins@45 {
+            brcm,pins = <45>;
+            brcm,function = <1>;
+            brcm,pull = <0>;
+        };
+    };
+};
+
+fragment@1 {
+    target-path = "/";
+    __overlay__ {
+        leds: leds {
+            compatible = "gpio-leds";
+            pinctrl-names = "default";
+            pinctrl-0 = <&led_pin>;
+            status = "okay";
+
+            led_usr: led_usr {
+                label = "led-usr";
+                gpios = <&gpio 45 0>;
+                linux,default-trigger = "none";
+                default-state = "off";
+            };
+        };
+    };
+};
+};

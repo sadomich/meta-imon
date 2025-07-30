@@ -1,0 +1,16 @@
+[Unit]
+Description=Copy custom network configuration to /run/systemd/network
+Before=systemd-networkd.service
+After=local-fs.target data.mount
+RequiresMountsFor=/data
+RequiresMountsFor=/run
+ConditionPathExists=/data/systemd/network
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/mkdir -p /run/systemd/network
+ExecStart=/bin/sh -c '/usr/bin/rsync -a /data/systemd/network/ /run/systemd/network/'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=Kick hardware watchdog until systemd is ready
+DefaultDependencies=no
+After=basic.target
+Before=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/safe-boot-watchdog.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

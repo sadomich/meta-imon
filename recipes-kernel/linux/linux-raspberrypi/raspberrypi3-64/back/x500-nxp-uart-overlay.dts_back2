@@ -1,0 +1,71 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+ compatible = "brcm,bcm2835";
+
+  fragment@0 {
+      target-path = "/clocks";
+      __overlay__ {
+          /* external oscillator of sc16is740 on I2C0 */
+          sc_osc: sc_osc {
+            compatible = "fixed-clock";
+            #clock-cells = <1>;
+            clock-frequency  = <14745600>;
+            clock-output-names = "sc_osc";
+          };
+      };
+  };
+
+  fragment@1 {
+    target = <&i2c0>;
+    __overlay__ {
+      pinctrl-names = "default";
+      pinctrl-0 = <&i2c0_pins>;
+      clock-frequency = <400000>;
+      #address-cells = <1>;
+      #size-cells = <0>;
+      status = "okay";
+
+      sc16is740: sc16is740@4d {
+        compatible = "nxp,sc16is740";
+        reg = <0x4d>;
+        clocks = <&sc_osc 0>;
+        interrupt-parent = <&gpio>;
+        interrupts = <45 2>;
+        gpio-controller;
+        pinctrl-0 = <&nxp_int_pins>;
+        pinctrl-names = "default";
+        #gpio-cells = <2>;
+        status = "okay";
+      };
+    };
+  };
+
+  fragment@2 {
+     target = <&i2c0_pins>;
+     frag1: __overlay__ {
+        brcm,pins = <0 1>;
+        brcm,function = <4>; /* alt0 */
+     };
+  };
+
+
+	fragment@3 {
+		target = <&gpio>;
+		__overlay__ {
+			nxp_int_pins: nxp_int_pins@45 {
+					brcm,pins = <45>;
+					brcm,function = <0>; /* in */
+					brcm,pull = <0>; /* none */
+			};
+		};
+	};
+
+	__overrides__ {
+		int_pin = <&sc16is740>,"interrupts:0", <&nxp_int_pins>,"brcm,pins:0",
+			  <&nxp_int_pins>,"reg:0";
+		addr = <&sc16is740>,"reg:0", <&sc_osc>,"name";
+		xtal = <&sc_osc>,"clock-frequency:0";
+	};
+};

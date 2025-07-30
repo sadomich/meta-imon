@@ -1,0 +1,14 @@
+[Unit]
+Description=Overlayfs /var/lib filesystem
+DefaultDependencies=no
+Before=local-fs.target
+After=systemd-remount-fs.service data.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/mount-overlay.sh /data/overlayfs/var/lib /var/lib
+ExecStop=/bin/umount /var/lib
+
+[Install]
+WantedBy=local-fs.target

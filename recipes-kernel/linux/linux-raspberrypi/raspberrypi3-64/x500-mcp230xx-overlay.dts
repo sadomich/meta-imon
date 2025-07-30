@@ -1,0 +1,49 @@
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+
+/ {
+    compatible = "brcm,bcm2835";
+
+    fragment@0 {
+        target = <&i2c0>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            mcp23008@20 {
+                compatible = "microchip,mcp23008";
+                reg = <0x20>;
+                gpio-controller;
+                #gpio-cells = <2>;
+                pinctrl-names = "default";
+                status = "okay";
+
+                // Konfiguracja GPIO0 jako wyjście i ustawienie na 0
+                gpio-line-names = "gpio0";
+                microchip,irq-mirror = <0>;
+            };
+
+            mcp23017@24 {
+                compatible = "microchip,mcp23017";
+                reg = <0x24>;
+                gpio-controller;
+                #gpio-cells = <2>;
+                pinctrl-names = "default";
+                status = "okay";
+            };
+
+            mcp23017@25 {
+                compatible = "microchip,mcp23017";
+                reg = <0x25>;
+                gpio-controller;
+                #gpio-cells = <2>;
+                pinctrl-names = "default";
+                status = "okay";
+            };
+        };
+    };
+};
+

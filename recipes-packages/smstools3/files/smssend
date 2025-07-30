@@ -1,0 +1,111 @@
+#!/bin/bash
+
+FULL_PATH=`readlink -f $0`
+PDIR=`dirname $FULL_PATH`
+
+LOGINFO="-p local0.info -t \"smssend\""
+LOGERR="-p local0.err -t \"smsend\""
+LOGWARN="-p local0.warn -t \"smssend\""
+
+log()
+{
+if [ $# -ne 2 ]
+then
+  echo "Wrong arguments count to log"
+  return 1
+else
+
+        case "$1" in
+                -info)
+                logger $LOGINFO $2
+                echo -e "\\033[1;34m$2"
+                ;;
+
+                -dbg)
+                logger $LOGINFO $2
+                echo -e "\\033[1;34m$2"
+                ;;
+
+                -err)
+                logger $LOGERR $2
+                echo -e "\\033[1;31m$2"
+                ;;
+
+                -warn)
+                logger $LOGWARN $2
+                echo -e "\\033[1;36m$2"
+                ;;
+
+                *)
+                echo "Wrong arguments to log"
+                ;;
+        esac
+
+        echo -ne "\\033[0;39m"
+fi
+return 0
+}
+
+usage()
+{
+        echo "Usage: smssend [-t national|international] To:[tel_number] Msg:[message]"
+}
+
+if [ $# -gt 0 ];then
+
+        echo "0"
+
+        TOA=""
+        OPTIONS=""
+        while [ "$1" != "" ]; do
+                if [ "$1" == "-t" ];then
+                        TOA=$2
+                else
+                        OPTIONS=`echo $OPTIONS $1 $2`
+                fi
+                shift
+                shift
+
+        done
+
+
+        SFILE="$(basename $0).$$.tmp"
+        echo $SFILE
+        echo $OPTIONS | awk -v file=$SFILE -v toa=$TOA  '{
+
+        if(match($0,/^To:(.*)[[:space:]]Msg:(.*)$/,a))
+        {
+
+
+            gsub(/'"'"'/,"",a[2]);
+            gsub(/'"'"'/,"",a[1]);
+
+            print "Sending SMS: " a[2] " to: " a[1];
+
+            print "To: "a[1] > "/data/sms/outgoing/"file;
+            if (toa != "")
+            {
+                print "To_TOA: "toa > "/data/sms/outgoing/"file;
+            }
+            print "Alphabet: ISO" >> "/data/sms/outgoing/"file;
+            print "" >> "/data/sms/outgoing/"file;
+            print a[2] > "/data/sms/outgoing/"file;
+            exit 0
+        }
+        else
+        {
+            print "Wrong message formattt: "$0;
+            print "Expected: \"To:'.*' Msg:'.*'\""
+            exit 1
+        }
+        }'
+        if [ $? -eq 0 ];then
+                log -info "SMS in queue"
+        else
+                log -warn "Wrong sms format: $@"
+        fi
+else
+        usage
+fi
+exit 
+

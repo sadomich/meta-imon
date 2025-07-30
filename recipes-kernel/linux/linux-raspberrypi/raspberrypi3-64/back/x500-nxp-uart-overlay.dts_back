@@ -1,0 +1,50 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+ compatible = "brcm,bcm2835";
+
+  fragment@0 {
+      target-path = "/clocks";
+      __overlay__ {
+          /* external oscillator of sc16is740 on I2C0 */
+          sc_osc: sc_osc {
+            compatible = "fixed-clock";
+            #clock-cells = <1>;
+            clock-frequency  = <14745600>;
+            clock-output-names = "sc_osc";
+          };
+      };
+  };
+
+  fragment@1 {
+    target = <&i2c0>;
+    __overlay__ {
+      pinctrl-names = "default";
+      pinctrl-0 = <&i2c0_pins>;
+      clock-frequency = <400000>;
+      #address-cells = <1>;
+      #size-cells = <0>;
+      status = "okay";
+
+      sc16is740: sc16is740@45 {
+        compatible = "nxp,sc16is740";
+        reg = <0x4d>;
+        clocks = <&sc_osc 0>;
+        interrupt-parent = <&gpio>;
+        interrupts = <45 2>;
+        status = "okay";
+      };
+
+
+    };
+  };
+
+  fragment@2 {
+     target = <&i2c0_pins>;
+     frag1: __overlay__ {
+        brcm,pins = <0 1>;
+        brcm,function = <4>; /* alt0 */
+     };
+  };
+};
